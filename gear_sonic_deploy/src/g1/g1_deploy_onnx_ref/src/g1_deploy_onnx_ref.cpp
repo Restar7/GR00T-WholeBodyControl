@@ -165,6 +165,7 @@ using namespace unitree_hg::msg::dds_;
 class G1Deploy {
   private:
     /// State machine for the control loop lifecycle.
+    // 中文说明：部署侧控制流会先等待机器人状态上线，再等待操作员放行，最后才进入真正控制。
     enum class ProgramState { INIT, WAIT_FOR_CONTROL, CONTROL };
     
     // =========================================================================
@@ -183,6 +184,8 @@ class G1Deploy {
     // =========================================================================
     // Input interface and buffered input data
     // =========================================================================
+    // 中文说明：所有输入源最终都会被规整到这些 buffer 中，
+    // 后面的观测拼接与策略推理只依赖统一缓冲区，而不关心输入来自键盘、手柄还是 ZMQ/ROS2。
     std::unique_ptr<InputInterface> input_interface_;
     
     // Buffered input data (the real data to the policy engine)
@@ -218,6 +221,8 @@ class G1Deploy {
     // =========================================================================
     // Local motion planner and movement state
     // =========================================================================
+    // 中文说明：planner 线程负责产生“参考动作序列”，
+    // control 线程则消费这些参考动作并和实时观测一起喂给策略。
     // New unified planner interface
     std::string planner_path;
     std::unique_ptr<LocalMotionPlannerBase> planner_;
@@ -1793,6 +1798,8 @@ class G1Deploy {
     
     // Initialize observation functions
     void InitializeObservationFunctions() {
+      // 中文说明：观测顺序以 YAML 配置为准，并且必须和模型输入维度严格对齐；
+      // 一旦维度不匹配，就直接抛错终止，避免把错误观测喂进策略。
       // Get all available observations from registry (single source of truth!)
       auto registry = GetObservationRegistry();
       
@@ -1977,6 +1984,8 @@ class G1Deploy {
     
     // Gather observations (simplified - functions read from internal state)
     bool GatherObservations() {
+      // 中文说明：这里不会临时查表拼观测，而是执行预先编译好的 active_obs_functions_，
+      // 这样控制线程里更稳定，也更容易保证实时性。
       // Clear observation buffer
       std::fill(obs_buffer_.begin(), obs_buffer_.end(), 0.0);
       
@@ -4465,4 +4474,3 @@ int main(int argc, char const* argv[]) {
   std::cout << "[DEBUG] Program exiting normally..." << std::endl;
   return 0;
 }
-
