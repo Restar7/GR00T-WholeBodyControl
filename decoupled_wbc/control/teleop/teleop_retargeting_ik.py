@@ -65,6 +65,8 @@ class TeleopRetargetingIK(Policy):
         self, body_data: dict, left_hand_data: dict, right_hand_data: dict
     ) -> np.ndarray:
         """Process only IK-related data, return joint positions"""
+        # 中文说明：warmup 会连续多次求解 IK，让求解器从默认姿态进入稳定区，
+        # 避免刚激活遥操作时因为初值太差产生抖动。
         if self.in_warmup:
             # TODO: Warmup is not necessary if we start IK from the current robot qpos, rather than the zero qpos
             for _ in range(50):
@@ -96,6 +98,7 @@ class TeleopRetargetingIK(Policy):
             Configuration vector that achieves the target poses.
         """
         if body_target_pose:
+            # 中文说明：身体 IK 先解上半身目标，再把左右手求解结果覆盖进完整关节向量。
             if self.using_reduced_robot_model:
                 body_q = self.body.reduced_to_full_configuration(
                     self.body_ik_solver(body_target_pose)
@@ -137,6 +140,8 @@ class TeleopRetargetingIK(Policy):
         self._most_recent_ik_data = ik_data
 
     def get_action(self) -> dict[str, any]:
+        # 中文说明：当上游暂时没有新数据时，保持最近一次可用 IK 结果，
+        # 这样输出更平滑，也更符合遥操作实际场景。
         # Process IK if active
         if self._most_recent_ik_data is not None:
             body_data = self._most_recent_ik_data["body_data"]

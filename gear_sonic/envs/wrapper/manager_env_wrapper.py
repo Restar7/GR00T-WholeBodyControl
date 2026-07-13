@@ -26,6 +26,8 @@ except ImportError:
 
 class ManagerEnvWrapper:
     def __init__(self, env: "ManagerBasedEnv", config):
+        # 中文说明：这个 wrapper 是 gear_sonic 训练栈和 Isaac Lab 原生环境之间的胶水层。
+        # 它负责把 Isaac Lab 的接口补成训练器真正要用的形态。
         env.wrapper = self
         self.env = env
         self.config = OmegaConf.create(config)
@@ -75,6 +77,8 @@ class ManagerEnvWrapper:
         self._blit_refresh_interval = int(self.config.get("plot_blit_refresh_interval", 120))
 
         # Initialize action transform module from config
+        # 中文说明：当策略输出、latent 接口或机器人 DOF 与训练时不完全一致时，
+        # action_transform_module 会在这里充当兼容层。
         self.action_transform_module = None
         self._needs_policy_atm = False  # Default: use policy obs directly
         self._policy_atm_indices = None
@@ -172,6 +176,8 @@ class ManagerEnvWrapper:
 
     def _setup_replay_joint_indices(self):
         """Setup joint indices for replay mode if robot has more DOFs than motion lib (29)."""
+        # 中文说明：如果当前机器人自由度比标准 29DoF G1 更多，
+        # 回放 motion lib 前必须先把身体关节和手部关节的索引映射算清楚。
         if self.env.scene["robot"].num_joints > 29:
             self._setup_action_joint_indices()
 
@@ -194,6 +200,8 @@ class ManagerEnvWrapper:
 
     def _setup_policy_atm(self, env_config, algo_config):  # noqa: ARG002
         """Setup policy_atm for action_transform_module when robot has more DOFs than ATM expects."""
+        # 中文说明：ATM 看到的观测维度要和它训练时一致；
+        # 如果当前机器人多了一些关节，就在这里裁剪/重排 policy_atm 观测。
         atm_num_joints = env_config.get("robot", {}).get("actions_dim") or env_config.get(
             "robot", {}
         ).get("num_joints", 29)

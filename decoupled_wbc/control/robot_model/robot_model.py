@@ -44,6 +44,8 @@ class RobotModel:
 
         # Set up supplemental info if provided
         self.supplemental_info = supplemental_info
+        # 中文说明：supplemental_info 是这层抽象最关键的元数据来源，
+        # 它告诉 RobotModel 哪些关节属于 body/hand、哪些是 joint group、默认姿态是什么。
         if self.supplemental_info is not None:
             # Cache indices for body and hand actuated joints separately
             self._body_actuated_joint_indices = [
@@ -232,6 +234,8 @@ class RobotModel:
         if q.shape[0] != self.num_dofs:
             raise ValueError(f"Expected q of length {self.num_dofs}, got {q.shape[0]} instead.")
 
+        # 中文说明：重力补偿并不会直接替代策略动作，
+        # 它更像一个按需叠加的“静态托举项”，通常只作用在手臂、腰部等负载较大的关节组。
         # Apply auto-clip if enabled
         if auto_clip:
             q = self.clip_configuration(q)

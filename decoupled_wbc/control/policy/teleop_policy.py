@@ -65,6 +65,8 @@ class TeleopPolicy(Policy):
         pass
 
     def get_action(self) -> dict[str, any]:
+        # 中文说明：TeleopPolicy 本身不直接求全身动作，
+        # 它先把设备流整理成腕部位姿、手指数据和控制命令，再交给 IK 生成上半身目标。
         # Get structured data
         streamer_output = self.teleop_streamer.get_streamer_data()
 
@@ -127,6 +129,8 @@ class TeleopPolicy(Policy):
         )
 
         # Run retargeting IK
+        # 中文说明：只有拿到新的有效 IK 数据时才刷新目标；
+        # 设备短暂断流时保持上一帧结果，避免机器人突然回零。
         if "ik_data" in action:
             self.retargeting_ik.set_goal(action["ik_data"])
         action["target_upper_body_pose"] = self.retargeting_ik.get_action()
@@ -139,6 +143,7 @@ class TeleopPolicy(Policy):
 
     def check_activation(self, teleop_data: dict, wait_for_activation: int = 5):
         """Activation logic only looks at teleop data commands"""
+        # 中文说明：激活/重置既可以由键盘触发，也可以由遥操作设备发来的组合键触发。
         key = self.keyboard_listener.read_msg() if self.keyboard_listener else ""
         toggle_activation_by_keyboard = key == "l"
         reset_teleop_policy_by_keyboard = key == "k"

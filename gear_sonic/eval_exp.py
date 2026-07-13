@@ -36,6 +36,8 @@ config_utils.register_rl_resolvers()
 
 class CheckpointEvaluator:
     """Continuously monitors an experiment directory for new checkpoints and evaluates them sequentially."""
+    # 中文说明：这个类不是“评估一次就退出”，而是持续巡检实验目录：
+    # 发现新 checkpoint 就顺序评估，并把结果尽量补齐到 wandb。
 
     def __init__(self, config):
         self.config = config
@@ -121,6 +123,8 @@ class CheckpointEvaluator:
         return logged_steps
 
     def _backfill_wandb(self):
+        # 中文说明：如果磁盘上已经有评估结果，但之前没成功同步到 wandb，
+        # 这里会把缺失 step 重新补录，避免长跑实验出现评估断层。
         if not self.wandb_run_id:
             self._load_wandb_config()
             if not self.wandb_run_id:
@@ -220,6 +224,8 @@ class CheckpointEvaluator:
                 logger.error(f"Error finishing wandb: {e}")
 
     def _load_metrics(self, eval_step: int, metrics_file: Path) -> dict | None:
+        # 中文说明：超大的 metrics 文件会裁掉逐 motion 的细粒度字典，
+        # 这样可以避免 wandb 页面和上传负载失控。
         try:
             with open(metrics_file) as f:
                 metrics_eval = json.load(f)

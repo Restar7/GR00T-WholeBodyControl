@@ -60,6 +60,9 @@ config_utils.register_rl_resolvers()
 
 @hydra.main(config_path="config", config_name="base_eval")
 def main(override_config: omegaconf.OmegaConf):
+    # 中文说明：评估入口和训练入口最大的不同是：
+    # 评估通常需要先读取 checkpoint 目录里的 config.yaml，
+    # 再叠加新的 override，确保“按训练时的模型语义”来重建环境和策略。
 
     hydra_log_path = os.path.join(hydra_config.HydraConfig.get().runtime.output_dir, "eval.log")
     logger.remove()
@@ -87,6 +90,8 @@ def main(override_config: omegaconf.OmegaConf):
                 logger.error(f"Could not find config path: {config_path}")
 
         if has_config:
+            # 中文说明：这里顺手做了一层旧仓库路径兼容，
+            # 把历史内部模块名改写成当前开源仓库里的路径。
             logger.info(f"Loading training config file from {config_path}")
             with open(config_path) as file:
                 raw = file.read()
@@ -131,6 +136,8 @@ def main(override_config: omegaconf.OmegaConf):
             print(f"resume wandb from run: {config.wandb.wandb_id}")  # noqa: T201
 
     with omegaconf.open_dict(config):
+        # 中文说明：有些 events / terminations 只应该在训练中启用，
+        # 评估时要显式剔除，避免把训练期的随机扰动混进离线评估结果。
         for event in config.manager_env.config.get("train_only_events", []):
             if event in config.manager_env.events:
                 config.manager_env.events.pop(event)
@@ -201,6 +208,7 @@ def main(override_config: omegaconf.OmegaConf):
     render_gpu_idx = _pick_display_gpu_index(default_idx=0)
 
     if simulator_type == "IsaacSim":
+        # 中文说明：评估同样依赖 Isaac Lab，只是常见设置是少量环境 + 可选渲染视频。
         try:
             with open("./rl/simulator/isaacsim/.isaacsim_version", encoding="utf-8") as f:
                 DEFAULT_ISAACSIM_VERSION = f.read().strip()

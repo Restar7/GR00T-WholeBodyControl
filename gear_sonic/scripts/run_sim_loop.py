@@ -34,6 +34,8 @@ class SimWrapper:
 
 
 def main(config: ArgsConfig):
+    # 中文说明：这个脚本只负责把 MuJoCo 仿真端拉起来，
+    # 让上层 deploy / teleop 代码可以像连接真实机器人一样连接它。
     wbc_config = config.load_wbc_yaml()
     # NOTE: we will override the interface to local if it is not specified
     wbc_config["ENV_NAME"] = config.env_name
@@ -54,6 +56,7 @@ def main(config: ArgsConfig):
         enable_image_publish=config.enable_image_publish,
     )
     # Start simulator as independent process
+    # 中文说明：默认用独立进程跑仿真，这样 MuJoCo 端和上层控制端可以解耦。
     SimulatorFactory.start_simulator(
         sim_wrapper.sim,
         as_thread=False,

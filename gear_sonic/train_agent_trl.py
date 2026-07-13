@@ -71,6 +71,8 @@ register_rl_resolvers()
 
 
 def resume_training(config):
+    # 中文说明：恢复训练时优先使用用户显式指定的 checkpoint；
+    # 如果没有，就回到实验目录中查找最近一次保存的 last.pt。
     if config.get("checkpoint", None) is not None:
         last_existing_checkpoint = config.checkpoint
     elif config.get("experiment_dir", None) is not None:
@@ -95,6 +97,8 @@ def resume_checkpoint(config):
 
 
 def create_manager_env(config, device, args_cli):
+    # 中文说明：这里把 Hydra 组合出来的 manager_env 配置实例化成 Isaac Lab 环境，
+    # 再包一层 ManagerEnvWrapper，补齐训练代码需要的观测分组、动作映射和可视化逻辑。
 
     # import wandb
 
@@ -154,6 +158,12 @@ def create_manager_env(config, device, args_cli):
 
 @hydra.main(config_path="config", config_name="base", version_base="1.1")
 def main(config: OmegaConf):
+    # 中文说明：训练主入口可以概括为 5 步：
+    # 1) 解析 Hydra / TRL 配置
+    # 2) 初始化分布式训练与随机种子
+    # 3) 启动 Isaac Sim
+    # 4) 创建环境、策略和 Trainer
+    # 5) 进入 PPO 训练循环
     simulator_type = "IsaacSim"
     env_config = config.manager_env
     from transformers import HfArgumentParser
@@ -167,6 +177,8 @@ def main(config: OmegaConf):
     elif config.get("checkpoint", None) is not None:
         resume_checkpoint(config)
 
+    # 中文说明：Hydra 的全局配置会在这里拆成 TRL 需要的参数对象，
+    # 后续 PPOTrainer / Accelerator 都依赖这几组结构化参数。
     config.algo.trl.output_dir = str(Path(config.experiment_dir))
 
     script_args, training_args, model_args = parser.parse_dict(config.algo.trl)
@@ -186,6 +198,8 @@ def main(config: OmegaConf):
         kwargs_handlers=[ddp_kwargs, kwargs],
     )
 
+    # 中文说明：多卡训练时，需要把 rank/world_size 等信息回写到配置里，
+    # 保证环境采样、日志记录、checkpoint 保存都知道当前进程身份。
     device = str(accelerator.device)
     if device == "cuda":
         device = "cuda:0"
@@ -205,6 +219,7 @@ def main(config: OmegaConf):
 
     unresolved_conf = OmegaConf.to_container(config, resolve=False)
     if config.use_wandb and accelerator.is_main_process:
+        # 中文说明：仅主进程创建 wandb run，避免多卡下重复初始化。
         project_name = f"{config.project_name}"
         run_name = config.experiment_dir.replace(f"{config.base_dir}/{project_name}/", "")
         wandb_dir = Path(config.wandb.wandb_dir)
@@ -226,6 +241,8 @@ def main(config: OmegaConf):
     # Setup simulator similar to train_agent.py
 
     if simulator_type == "IsaacSim":
+        # 中文说明：训练的物理仿真后端是 Isaac Sim。
+        # 这里先初始化 AppLauncher，再把 Hydra 未消费的参数还给后续解析流程。
         try:
             with open("./rl/simulator/isaacsim/.isaacsim_version", encoding="utf-8") as f:
                 DEFAULT_ISAACSIM_VERSION = f.read().strip()
@@ -319,6 +336,8 @@ def main(config: OmegaConf):
     env_config.config.experiment_dir = str(Path(config.experiment_dir))
 
     env = create_manager_env(config, device, args_cli)
+    # 中文说明：环境创建完成后，actor / critic / trainer 会从 env 中读取
+    # observation group、action 维度、command manager 等关键信息。
     if config.get("replay", False):
         _save_video_path = config.get("replay_save_video", None)
         env.run_replay(

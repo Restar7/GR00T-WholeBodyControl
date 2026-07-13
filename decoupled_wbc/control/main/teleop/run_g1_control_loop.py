@@ -37,6 +37,8 @@ CONTROL_NODE_NAME = "ControlPolicy"
 
 
 def main(config: ControlLoopConfig):
+    # 中文说明：这是 decoupled_wbc 控制栈最关键的闭环，
+    # 每轮都执行“读状态 -> 收目标 -> 算动作 -> 下发动作 -> 发布状态”。
     ros_manager = ROSManager(node_name=CONTROL_NODE_NAME)
     node = ros_manager.node
 
@@ -93,6 +95,8 @@ def main(config: ControlLoopConfig):
         while ros_manager.ok():
             t_start = time.monotonic()
             with telemetry.timer("total_loop"):
+                # 中文说明：同步仿真模式由控制循环自己推进一步模拟器；
+                # 异步模式则依赖独立线程持续推进。
                 # Step simulator if in sync mode
                 with telemetry.timer("step_simulator"):
                     if env.sim and config.sim_sync_mode:
@@ -105,6 +109,8 @@ def main(config: ControlLoopConfig):
 
                 # Measure policy setup time
                 with telemetry.timer("policy_setup"):
+                    # 中文说明：上半身目标通常来自遥操作策略或更高层控制器，
+                    # 这里会整理成 wbc_goal，再交给 whole-body policy 处理。
                     upper_body_cmd = upper_body_policy_subscriber.get_msg()
 
                     t_now = time.monotonic()
@@ -128,6 +134,7 @@ def main(config: ControlLoopConfig):
 
                 # Measure action queue time
                 with telemetry.timer("queue_action"):
+                    # 中文说明：动作下发前会先走安全检查，然后再从关节顺序映射到执行器顺序。
                     env.queue_action(wbc_action)
 
                 # Publish status information for InteractiveModeController

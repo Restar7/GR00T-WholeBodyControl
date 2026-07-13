@@ -57,6 +57,8 @@ class G1Env(HumanoidEnv):
 
         # Initialize simulator if in simulation mode
         self.use_sim = self.config.get("ENV_TYPE") == "sim"
+        # 中文说明：同一套环境抽象既支持真机，也支持仿真；
+        # 区别主要体现在 simulator 初始化和手部标定阶段。
 
         if self.use_sim:
             # Create simulator using factory
@@ -110,6 +112,8 @@ class G1Env(HumanoidEnv):
         return self._hands
 
     def observe(self) -> Dict[str, any]:
+        # 中文说明：observe 会把机体、双手、浮动基座和特权观测统一拼成一个字典，
+        # 上层策略只和这个标准化后的观测接口交互。
         # Get observations from body and hands
         body_obs = self.body().observe()
 
@@ -214,6 +218,8 @@ class G1Env(HumanoidEnv):
         )
 
     def queue_action(self, action: Dict[str, any]):
+        # 中文说明：策略输出采用“全关节顺序”，而底层执行器通常按“机体/左右手执行器顺序”工作，
+        # 所以下发前一定要先做安全检查和顺序映射。
         # Safety check
         if self.last_obs is not None:
             safety_result = self.safety_monitor.handle_violations(self.last_obs, action)

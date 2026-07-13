@@ -146,6 +146,8 @@ class TeleopStreamer:
 
     def _get_live_data(self) -> StreamerOutput:
         """Get structured data instead of raw dict"""
+        # 中文说明：身体流和手部流允许来自不同设备；
+        # 如果两路同时存在，这里会把它们合并成统一的 StreamerOutput。
         if self.body_streamer:
             streamer_data = self.body_streamer.get()
         else:
@@ -163,6 +165,8 @@ class TeleopStreamer:
         return streamer_data
 
     def get_streamer_data(self) -> StreamerOutput:
+        # 中文说明：对外只暴露“预处理后”的数据。
+        # 如果还没标定完成，就故意清空 ik_data，避免未对齐数据直接进入 IK。
         if self.enable_real_device:
             streamer_data = self._get_live_data()
         elif self.replay_mode:
@@ -184,6 +188,7 @@ class TeleopStreamer:
 
     def calibrate(self):
         """Calibrate the pre-processors using only IK data."""
+        # 中文说明：标定的本质，是建立“人类设备坐标系 -> 机器人参考坐标系”的初始对齐。
         if self.replay_mode:
             ik_data = self.replay_calibration_data
         else:
@@ -201,6 +206,7 @@ class TeleopStreamer:
 
     def pre_process(self, raw_data):
         """Pre-process the raw data."""
+        # 中文说明：这里把原始设备数据转成机器人语义下的身体目标位姿和手部输入。
         assert (
             self.body_pre_processor or self.left_hand_pre_processor or self.right_hand_pre_processor
         ), "Pre-processors are not initialized."

@@ -67,6 +67,8 @@ class G1GearWbcPolicy(Policy):
 
     def compute_observation(self, observation: Dict[str, Any]) -> tuple[np.ndarray, int]:
         """Compute the observation vector from current state"""
+        # 中文说明：这里构造的是下半身 ONNX 策略使用的历史观测单帧，
+        # 后面 set_observation 会把多帧历史拼成最终输入张量。
         # Get body joint indices (excluding waist roll and pitch)
         self.gait_indices = torch.remainder(self.gait_indices + 0.02 * self.freq_cmd, 1.0)
         durations = torch.full_like(self.gait_indices, 0.5)
@@ -218,6 +220,8 @@ class G1GearWbcPolicy(Policy):
             self.yaw_cmd = torso_orientation_rpy[2]
 
         # Run policy inference
+        # 中文说明：这里根据导航命令大小在“站立策略”和“行走策略”之间切换，
+        # 属于一个非常直接但实用的双策略门控逻辑。
         with torch.no_grad():
             # Select appropriate policy based on command magnitude
             if np.linalg.norm(self.cmd) < 0.05:
