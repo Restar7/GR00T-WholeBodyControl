@@ -88,6 +88,18 @@ class ManagerEnvWrapper:
         self._hand_joint_indices = None
         self._setup_replay_joint_indices()  # Setup for replay mode
 
+        self._use_motion_hand_dof = bool(self.config.get("use_motion_hand_dof", False))
+        self._last_motion_hand_targets = None
+        if self._use_motion_hand_dof:
+            self._setup_action_joint_indices()
+            if self.motion_command is None or self._motion_lib is None:
+                raise ValueError("use_motion_hand_dof=True requires an active motion command")
+            if self._hand_joint_indices is None or len(self._hand_joint_indices) != 14:
+                raise ValueError(
+                    "use_motion_hand_dof=True requires a 43-DOF G1 with 14 actuated hand joints"
+                )
+            logger.info("Continuous motion hand control enabled for 14 Dex3 joints")
+
         # Initialize finger primitive support
         self._use_finger_primitive = self.config.get("use_finger_primitive", False)
         self._finger_primitive_map = None
@@ -230,6 +242,29 @@ class ManagerEnvWrapper:
         robot = self.env.scene["robot"]
         self._body_joint_indices = get_body_joint_indices(robot)
         self._hand_joint_indices = get_hand_joint_indices(robot)
+
+    def _apply_motion_hand_dof_targets(self):
+        """Apply the external hand stream without changing SONIC's 29-DOF action space."""
+        if not self._use_motion_hand_dof:
+            return
+
+        hand_targets = self.motion_command.hand_dof_pos
+        if hand_targets is None:
+            raise ValueError(
+                "use_motion_hand_dof=True but the motion has no hand DOFs; "
+                "store 14 hand values after the 29 body DOFs and set hand_dof_count=14"
+            )
+        if hand_targets.shape[-1] != len(self._hand_joint_indices):
+            raise ValueError(
+                "motion hand DOF width does not match the robot: "
+                f"motion={hand_targets.shape[-1]} robot={len(self._hand_joint_indices)}"
+            )
+
+        robot = self.env.scene["robot"]
+        limits = robot.data.soft_joint_pos_limits[:, self._hand_joint_indices]
+        hand_targets = torch.clamp(hand_targets, min=limits[..., 0], max=limits[..., 1])
+        robot.set_joint_position_target(hand_targets, joint_ids=self._hand_joint_indices)
+        self._last_motion_hand_targets = hand_targets.detach().clone()
 
     def _setup_finger_primitives(self):
         """Setup finger primitive action mapping from config.
@@ -846,6 +881,8 @@ class ManagerEnvWrapper:
 
         if action_clip_value is not None and action_clip_value > 0:
             env_actions = torch.clip(env_actions, -action_clip_value, action_clip_value)
+
+        self._apply_motion_hand_dof_targets()
 
         # Lightweight action plot update (env 0, first N joints)
         if self.turn_on_visualization:
@@ -1943,7 +1980,15 @@ class ManagerEnvWrapper:
             if hand_dof_pos is not None:
                 # Hand DOFs are the last N joints (in Isaac order, not G1_HAND_JOINTS order)
                 num_hand_dof = hand_dof_pos.shape[-1]
-                joint_pos[:, -num_hand_dof:] = hand_dof_pos
+                if self._hand_joint_indices is None or num_hand_dof != len(
+                    self._hand_joint_indices
+                ):
+                    raise ValueError(
+                        "replay hand DOF width does not match the robot hand mapping: "
+                        f"motion={num_hand_dof} robot="
+                        f"{0 if self._hand_joint_indices is None else len(self._hand_joint_indices)}"
+                    )
+                joint_pos[:, self._hand_joint_indices] = hand_dof_pos
         else:
             joint_pos = motion_lib_joint_pos
             joint_vel = motion_lib_joint_vel

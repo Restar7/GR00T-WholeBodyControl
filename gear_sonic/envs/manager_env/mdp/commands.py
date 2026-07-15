@@ -1671,6 +1671,13 @@ class TrackingCommand(CommandTerm):
         )
 
     @property
+    def hand_dof_pos(self) -> torch.Tensor | None:
+        """Return the synchronized continuous 14-DOF hand reference, if present."""
+        return self.motion_lib.get_hand_dof_pos(
+            self.motion_ids, self.motion_start_time_steps + self.time_steps
+        )
+
+    @property
     def joint_pos(self) -> torch.Tensor:
         """Return reference joint positions for the current frame.
 
@@ -3032,7 +3039,16 @@ class TrackingCommand(CommandTerm):
             )
             joint_pos[:, self.body_joint_indices] = motion_lib_joint_pos
             joint_vel[:, self.body_joint_indices] = motion_lib_joint_vel
-            joint_pos[:, self.extra_joint_indices] = self.extra_default_positions
+            hand_dof_pos = self.hand_dof_pos
+            if hand_dof_pos is not None:
+                if hand_dof_pos.shape[-1] != len(self.extra_joint_indices):
+                    raise ValueError(
+                        "hand DOF width does not match the robot's extra joints: "
+                        f"motion={hand_dof_pos.shape[-1]} robot={len(self.extra_joint_indices)}"
+                    )
+                joint_pos[:, self.extra_joint_indices] = hand_dof_pos
+            else:
+                joint_pos[:, self.extra_joint_indices] = self.extra_default_positions
             joint_vel[:, self.extra_joint_indices] = self.extra_default_velocities
         else:
             joint_pos = motion_lib_joint_pos

@@ -54,6 +54,9 @@ config:
   action_transform_module_checkpoint:
   meta_action_dim:
   needs_policy_atm: true
+  # Keep SONIC on its released 29-DOF body action space while applying an
+  # optional continuous 14-DOF hand reference directly to a 43-DOF robot.
+  use_motion_hand_dof: false
 
   obs:
     obs_dict: {}

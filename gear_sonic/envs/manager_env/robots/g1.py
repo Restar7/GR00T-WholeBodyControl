@@ -6,6 +6,7 @@ from isaaclab.assets.articulation import ArticulationCfg
 import isaaclab.sim as sim_utils
 
 ASSET_DIR = "gear_sonic/data/assets"
+ROBOT_MODEL_DIR = "gear_sonic/data/robots/g1"
 
 ARMATURE_5020 = 0.003609725
 ARMATURE_7520_14 = 0.010177520
@@ -353,6 +354,27 @@ G1_CYLINDER_MODEL_12_DEX_CFG = ArticulationCfg(
                 ".*_wrist_pitch_joint": ARMATURE_4010,
                 ".*_wrist_yaw_joint": ARMATURE_4010,
             },
+        ),
+    },
+)
+
+
+# The released SONIC policy remains a 29-DOF body controller.  This asset only
+# makes the 14 Dex3 joints physically controllable so an external hand stream
+# can be applied alongside the unchanged body policy.
+G1_CYLINDER_MODEL_12_DEX_43DOF_CFG = G1_CYLINDER_MODEL_12_DEX_CFG.replace(
+    spawn=G1_CYLINDER_MODEL_12_DEX_CFG.spawn.replace(
+        asset_path=f"{ROBOT_MODEL_DIR}/g1_29dof_with_hand_rev_1_0.urdf"
+    ),
+    actuators={
+        **G1_CYLINDER_MODEL_12_DEX_CFG.actuators,
+        "hands": ImplicitActuatorCfg(
+            joint_names_expr=[".*_hand_.*_joint"],
+            effort_limit_sim=2.45,
+            velocity_limit_sim=12.0,
+            stiffness=10.0,
+            damping=0.2,
+            armature=0.001,
         ),
     },
 )

@@ -16,6 +16,8 @@ import joblib
 import pxr
 
 from gear_sonic.envs.manager_env.mdp import terrain
+from gear_sonic.envs.manager_env.mdp import observations as observation_mdp
+from gear_sonic.envs.env_utils import joint_utils
 from gear_sonic.envs.manager_env.robots import g1, h2
 from gear_sonic.trl.utils import common
 
@@ -1001,6 +1003,12 @@ class ModularTrackingEnvCfg(ManagerBasedRLEnvCfg):
                 "action_scale": g1.G1_MODEL_12_ACTION_SCALE,
                 "isaaclab_to_mujoco_mapping": g1.G1_ISAACLAB_TO_MUJOCO_MAPPING,
             },
+            "g1_model_12_dex_43dof": {
+                "robot_cfg": g1.G1_CYLINDER_MODEL_12_DEX_43DOF_CFG,
+                "action_scale": g1.G1_MODEL_12_ACTION_SCALE,
+                "isaaclab_to_mujoco_mapping": g1.G1_ISAACLAB_TO_MUJOCO_MAPPING,
+                "body_only_policy": True,
+            },
             "h2": {
                 "robot_cfg": h2.H2_CFG,
                 "action_scale": h2.H2_ACTION_SCALE,
@@ -1018,6 +1026,20 @@ class ModularTrackingEnvCfg(ManagerBasedRLEnvCfg):
         self.isaaclab_to_mujoco_mapping = robot_mapping[config["robot"].get("type", "g1")][
             "isaaclab_to_mujoco_mapping"
         ]
+
+        if robot_mapping[robot_type].get("body_only_policy", False):
+            # Preserve the released SONIC checkpoint contract: its policy action
+            # and proprioceptive observations contain only the 29 body joints.
+            self.actions.joint_pos.joint_names = list(joint_utils.G1_ISAACLab_ORDER)
+            self.actions.joint_pos.preserve_order = True
+            for group_name in ("policy", "critic"):
+                group = getattr(self.observations, group_name, None)
+                if group is None:
+                    continue
+                if getattr(group, "joint_pos", None) is not None:
+                    group.joint_pos.func = observation_mdp.joint_pos_wo_hand
+                if getattr(group, "joint_vel", None) is not None:
+                    group.joint_vel.func = observation_mdp.joint_vel_wo_hand
 
         # curriculum? WARNING HARDCODED
         import importlib

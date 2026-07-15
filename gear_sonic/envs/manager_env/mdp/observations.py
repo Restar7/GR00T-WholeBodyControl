@@ -1869,14 +1869,18 @@ def ext_forces(
 # Uses get_body_joint_indices from joint_utils.py
 
 
-def joint_pos_wo_hand(env: ManagerBasedEnv, asset_cfg) -> torch.Tensor:
+def joint_pos_wo_hand(
+    env: ManagerBasedEnv, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")
+) -> torch.Tensor:
     """Get joint positions excluding hand joints (29 DOF body only)."""
     asset = env.scene[asset_cfg.name]
     body_indices = joint_utils.get_body_joint_indices(asset)
     return asset.data.joint_pos[:, body_indices] - asset.data.default_joint_pos[:, body_indices]
 
 
-def joint_vel_wo_hand(env: ManagerBasedEnv, asset_cfg) -> torch.Tensor:
+def joint_vel_wo_hand(
+    env: ManagerBasedEnv, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")
+) -> torch.Tensor:
     """Get joint velocities excluding hand joints (29 DOF body only)."""
     asset = env.scene[asset_cfg.name]
     body_indices = joint_utils.get_body_joint_indices(asset)

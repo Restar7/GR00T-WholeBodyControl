@@ -329,6 +329,7 @@ class TrajectoryRecorderTerm(recorder_manager.RecorderTerm):
                 "dof_pos": np.array(data["dof_pos"]),
                 "root_pos_w": np.array(data["root_pos_w"]),
                 "root_quat_w": np.array(data["root_quat_w"]),
+                "joint_names": list(self.env.scene["robot"].joint_names),
                 "quat_format": "wxyz",
                 "fps": effective_fps,
                 "num_joints": data["dof_pos"][0].shape[0],
