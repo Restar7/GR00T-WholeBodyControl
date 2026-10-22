@@ -191,11 +191,27 @@ class ChannelFactory(Singleton):
     __domain = None
     __participant = None
     __qos = None
+    __domain_id = None
+    __domain_interface = None
 
     def __init__(self):
         super().__init__()
 
     def Init(self, id: int, networkInterface: str = None, qos: Qos = None):
+        # CycloneDDS only allows one Domain per process for a given configuration:
+        # creating it twice returns DDS_RETCODE_PRECONDITION_NOT_MET. Reuse the
+        # existing domain/participant when the same settings are requested again
+        # (run_sim_loop.py initialises the channel both in SimWrapper and BaseSimulator).
+        if self.__domain is not None and self.__participant is not None:
+            if self.__domain_id == id and self.__domain_interface == networkInterface:
+                return True
+            print(
+                "[ChannelFactory] already initialised with domain "
+                f"{self.__domain_id} on interface {self.__domain_interface!r}; "
+                f"ignoring request for domain {id} on {networkInterface!r}"
+            )
+            return False
+
         config = None
         # choose config
         if networkInterface is None:
@@ -222,6 +238,8 @@ class ChannelFactory(Singleton):
             return False
 
         self.__qos = qos
+        self.__domain_id = id
+        self.__domain_interface = networkInterface
 
         return True
 
