@@ -30,7 +30,7 @@ DEFAULT_SCENE = (
 WBC_YAML = REPO_ROOT / "gear_sonic/utils/mujoco_sim/wbc_configs/g1_29dof_sonic_model12.yaml"
 
 # 初始自由相机（跟场景里的 pick_trash_preview 差不多，但可自由拖动）
-CAM = {"lookat": (0.45, -0.05, 0.72), "distance": 2.7, "azimuth": 330.0, "elevation": -14.0}
+CAM = {"lookat": (0.45, -0.05, 0.72), "distance": 2.7, "azimuth": 150.0, "elevation": -18.0}
 
 
 def load_wbc_gains():
