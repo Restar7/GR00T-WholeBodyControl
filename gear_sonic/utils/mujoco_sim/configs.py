@@ -326,6 +326,12 @@ class BaseConfig(ArgsConfigTemplate):
 
         wbc_config = override_wbc_config(wbc_config, self)
 
+        # 场景覆盖：换任务场景不用动 wbc yaml
+        scene_override = self.get("robot_scene", None) or os.environ.get("GS_ROBOT_SCENE")
+        if scene_override:
+            wbc_config["ROBOT_SCENE"] = str(scene_override)
+            print(f"[scene] ROBOT_SCENE override -> {wbc_config['ROBOT_SCENE']}")
+
         return wbc_config
 
 
@@ -341,6 +347,13 @@ class SimLoopConfig(BaseConfig):
 
     camera_port: int = 5555
     """Camera port for image publishing"""
+
+    robot_scene: Optional[str] = None
+    """Override the WBC yaml's ROBOT_SCENE with a path relative to the repo root.
+
+    Lets you swap in a task scene without editing the wbc yaml, e.g.
+    --robot-scene gear_sonic/data/robot_model/model_data/g1/scene_pick_trash_43dof.xml
+    """
 
     verbose: bool = False
     """Verbose output, override the base config verbose"""

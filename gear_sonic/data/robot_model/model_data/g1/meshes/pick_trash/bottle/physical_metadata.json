@@ -1,0 +1,75 @@
+{
+  "model": "Nongfu Spring, 550 mL red-cap natural water bottle (empty)",
+  "status": "engineering approximation / NOT factory CAD or measured mass",
+  "no_water": true,
+  "nominal_product_capacity_ml": 550,
+  "estimated_brim_outer_volume_ml": 595.46,
+  "units": {
+    "length": "m",
+    "mass": "kg",
+    "inertia": "kg*m^2"
+  },
+  "overall_height_m": 0.227,
+  "nominal_body_diameter_m": 0.064,
+  "cap_diameter_m": 0.032,
+  "cap_height_m": 0.013,
+  "label_height_m": 0.064,
+  "label_center_z_m": 0.082,
+  "individual_inertial_data": {
+    "pet_bottle": {
+      "mass": 0.0194,
+      "com": 0.09202849602980424,
+      "ixx": 0.00012037556258330122,
+      "iyy": 0.00012037556258330122,
+      "izz": 1.4578626727320047e-05,
+      "raw_pet_mass_by_thickness": 0.01994393211044493
+    },
+    "red_cap": {
+      "mass": 0.0018,
+      "com": 0.008137777777777777,
+      "ixx": 2.0316993111111108e-07,
+      "iyy": 2.0316993111111108e-07,
+      "izz": 3.36351e-07
+    },
+    "printed_label": {
+      "mass": 0.0007,
+      "com": 0.032,
+      "ixx": 5.942041933333333e-07,
+      "iyy": 5.942041933333333e-07,
+      "izz": 7.105417200000001e-07
+    }
+  },
+  "total_empty_assembly_mass_kg": 0.0219,
+  "meshes_vertices": {
+    "pet_hollow": 70850,
+    "cap": 25922,
+    "label": 4825
+  },
+  "calibration_required": {
+    "height_and_outer_diameter": "Measure actual empty 550mL SKU with calipers; 227x64mm are web user-reported.",
+    "pet_bottle_mass": "Weigh PET bottle after removing cap and label on 0.01g scale.",
+    "cap_mass": "Weigh cap; default 1.8g from generic 30/25 closure producer.",
+    "label_mass": "Weigh detached dry label; default 0.7g estimated.",
+    "thread_pitch_and_neck": "Visual screw thread is approximate and is not an industrial screw-fit CAD.",
+    "com_and_inertia": "Based on PET shell thickness model, not measured.",
+    "deformation": "Bodies are rigid; empty PET buckling requires a deformable model."
+  },
+  "references": [
+    {
+      "purpose": "reported 550 mL bottle dimensions",
+      "url": "https://zhida.baidu.com/question/413060760.html"
+    },
+    {
+      "purpose": "30/25 reference closure 1.8g",
+      "url": "https://www.hspreform.com/product/30mm-plastic--caps/30mm%283025%29Cap.html"
+    },
+    {
+      "purpose": "typical still-water PET preform weights (not this SKU)",
+      "url": "https://www.hspreform.com/news/industry-news/factors-to-consider-before-ordering-pet-preforms.html"
+    },
+    {
+      "purpose": "current Isaac Lab URDF conversion pipeline",
+      "url": "https://isaac-sim.github.io/IsaacLab/develop/source/how-to/import_new_asset.html"
+    }
+  ]
+}

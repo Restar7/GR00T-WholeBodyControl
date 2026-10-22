@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- NOMINAL 550 mL EMPTY bottle, assembled cap and label. No liquid or water mass. -->
+<mujoco model="nongfu_spring_550ml_empty">
+  <compiler angle="radian" coordinate="local" inertiafromgeom="false"/>
+  <option gravity="0 0 -9.81" timestep="0.002"/>
+  <size njmax="150" nconmax="100"/>
+  <visual><headlight ambient=".45 .45 .45" diffuse=".75 .75 .75" specular=".75 .75 .75"/></visual>
+  <asset>
+    <mesh name="pet_visual" file="meshes/bottle_hollow.obj"/>
+    <mesh name="cap_visual" file="meshes/cap_red.obj"/>
+    <mesh name="label_visual" file="meshes/label_wrap.obj"/>
+    <texture name="printed_label_tex" type="2d" file="meshes/label_texture.png"/>
+    <material name="pet_translucent" rgba=".91 .97 .99 .45" specular=".75" shininess=".65"/>
+    <material name="red_hdpe" rgba=".86 .035 .068 1" specular=".22" shininess=".37"/>
+    <material name="paper_label" texture="printed_label_tex" rgba="1 1 1 1" specular=".08" shininess=".12"/>
+  </asset>
+  <worldbody>
+    
+    <light name="key" directional="true" pos="-1 -2 3" dir=".35 .45 -1"/>
+    <body name="pet_bottle" pos="0 0 .26">
+      <freejoint name="floating_bottle"/>
+      <inertial pos="0 0 0.09202849603" mass="0.0194" diaginertia="0.0001203755626 0.0001203755626 1.457862673e-05"/>
+      <geom name="bottle_shell_visual" type="mesh" mesh="pet_visual" material="pet_translucent"
+            contype="0" conaffinity="0" group="1" density="0"/>
+      <geom type="cylinder" group="3" size="0.024 0.0065" pos="0 0 0.0065" rgba="0 0 0 0" friction="0.5 .005 .0001" density="0"/><geom type="cylinder" group="3" size="0.0298 0.0085" pos="0 0 0.0215" rgba="0 0 0 0" friction="0.5 .005 .0001" density="0"/><geom type="cylinder" group="3" size="0.0316 0.0695" pos="0 0 0.0995" rgba="0 0 0 0" friction="0.5 .005 .0001" density="0"/><geom type="cylinder" group="3" size="0.0292 0.005" pos="0 0 0.174" rgba="0 0 0 0" friction="0.5 .005 .0001" density="0"/><geom type="cylinder" group="3" size="0.026 0.0045" pos="0 0 0.1835" rgba="0 0 0 0" friction="0.5 .005 .0001" density="0"/><geom type="cylinder" group="3" size="0.0218 0.0045" pos="0 0 0.1925" rgba="0 0 0 0" friction="0.5 .005 .0001" density="0"/><geom type="cylinder" group="3" size="0.0165 0.0055" pos="0 0 0.2025" rgba="0 0 0 0" friction="0.5 .005 .0001" density="0"/><geom type="cylinder" group="3" size="0.0141 0.003" pos="0 0 0.211" rgba="0 0 0 0" friction="0.5 .005 .0001" density="0"/>
+      <body name="red_cap" pos="0 0 0.214">
+        <inertial pos="0 0 0.008137777778" mass="0.0018" diaginertia="2.031699311e-07 2.031699311e-07 3.36351e-07"/>
+        <geom name="red_cap_visual" type="mesh" mesh="cap_visual" material="red_hdpe"
+              contype="0" conaffinity="0" group="1" density="0"/>
+        <geom name="cap_collision" type="cylinder" size=".0159 0.0065"
+              pos="0 0 0.0065" density="0" group="3"
+              rgba="0 0 0 0" friction=".5 .005 .0001"/>
+      </body>
+      <body name="printed_label" pos="0 0 0.05">
+        <inertial pos="0 0 0.032" mass="0.0007" diaginertia="5.942041933e-07 5.942041933e-07 7.1054172e-07"/>
+        <geom name="label_visual" type="mesh" mesh="label_visual" material="paper_label"
+              contype="0" conaffinity="0" group="1" density="0"/>
+      </body>
+    </body>
+  </worldbody>
+</mujoco>

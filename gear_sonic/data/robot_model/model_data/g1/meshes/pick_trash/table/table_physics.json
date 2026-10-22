@@ -1,0 +1,246 @@
+{
+  "description": "9-part rigid hardwood table, geometry in m (CAD STEP in mm).",
+  "units_simulation": "m, kg, s, rad",
+  "units_STEP": "mm",
+  "frame": {
+    "origin": "ground directly below tabletop center",
+    "axes": "+X right, +Y rear, +Z up",
+    "bottom_z_m": 0.0
+  },
+  "assumptions_not_measured": {
+    "wood_density_kg_m3": 650.0,
+    "mujoco_sliding_friction": 0.68,
+    "ground_sliding_friction": 0.9,
+    "joints": "ideal rigid glued/screwed fixed joints",
+    "foot_material": "bare wood; no rubber feet",
+    "tabletop_edges": "unrounded box primitives"
+  },
+  "dimensions_m": {
+    "overall": [
+      0.8,
+      0.8,
+      0.8
+    ],
+    "top_thickness": 0.03,
+    "leg_cross_section": [
+      0.05,
+      0.05
+    ],
+    "leg_height": 0.77,
+    "leg_center_offset_xy": 0.33,
+    "apron_cross_section": [
+      0.025,
+      0.11
+    ],
+    "apron_span_between_legs": 0.61,
+    "apron_z_range": [
+      0.66,
+      0.77
+    ]
+  },
+  "total_mass_kg": 21.846500000000002,
+  "center_of_mass_m": [
+    0.0,
+    0.0,
+    0.679385599523951
+  ],
+  "total_inertia_at_com_kg_m2": [
+    [
+      2.3480151568554444,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      2.3480151568554444,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      3.033811773958333
+    ]
+  ],
+  "parts": [
+    {
+      "name": "tabletop",
+      "type": "top",
+      "size_m": [
+        0.8,
+        0.8,
+        0.03
+      ],
+      "center_m": [
+        0.0,
+        0.0,
+        0.785
+      ],
+      "mass_kg": 12.48,
+      "inertia_diagonal_kg_m2": [
+        0.6665360000000001,
+        0.6665360000000001,
+        1.3312000000000002
+      ]
+    },
+    {
+      "name": "leg_front_left",
+      "type": "leg",
+      "size_m": [
+        0.05,
+        0.05,
+        0.77
+      ],
+      "center_m": [
+        -0.33,
+        -0.33,
+        0.385
+      ],
+      "mass_kg": 1.2512500000000004,
+      "inertia_diagonal_kg_m2": [
+        0.06208285416666668,
+        0.06208285416666668,
+        0.0005213541666666669
+      ]
+    },
+    {
+      "name": "leg_front_right",
+      "type": "leg",
+      "size_m": [
+        0.05,
+        0.05,
+        0.77
+      ],
+      "center_m": [
+        0.33,
+        -0.33,
+        0.385
+      ],
+      "mass_kg": 1.2512500000000004,
+      "inertia_diagonal_kg_m2": [
+        0.06208285416666668,
+        0.06208285416666668,
+        0.0005213541666666669
+      ]
+    },
+    {
+      "name": "leg_rear_left",
+      "type": "leg",
+      "size_m": [
+        0.05,
+        0.05,
+        0.77
+      ],
+      "center_m": [
+        -0.33,
+        0.33,
+        0.385
+      ],
+      "mass_kg": 1.2512500000000004,
+      "inertia_diagonal_kg_m2": [
+        0.06208285416666668,
+        0.06208285416666668,
+        0.0005213541666666669
+      ]
+    },
+    {
+      "name": "leg_rear_right",
+      "type": "leg",
+      "size_m": [
+        0.05,
+        0.05,
+        0.77
+      ],
+      "center_m": [
+        0.33,
+        0.33,
+        0.385
+      ],
+      "mass_kg": 1.2512500000000004,
+      "inertia_diagonal_kg_m2": [
+        0.06208285416666668,
+        0.06208285416666668,
+        0.0005213541666666669
+      ]
+    },
+    {
+      "name": "apron_front",
+      "type": "apron",
+      "size_m": [
+        0.61,
+        0.025,
+        0.11
+      ],
+      "center_m": [
+        0.0,
+        -0.33,
+        0.715
+      ],
+      "mass_kg": 1.0903749999999999,
+      "inertia_diagonal_kg_m2": [
+        0.0011562518229166665,
+        0.03491017291666666,
+        0.03386750182291666
+      ]
+    },
+    {
+      "name": "apron_rear",
+      "type": "apron",
+      "size_m": [
+        0.61,
+        0.025,
+        0.11
+      ],
+      "center_m": [
+        0.0,
+        0.33,
+        0.715
+      ],
+      "mass_kg": 1.0903749999999999,
+      "inertia_diagonal_kg_m2": [
+        0.0011562518229166665,
+        0.03491017291666666,
+        0.03386750182291666
+      ]
+    },
+    {
+      "name": "apron_left",
+      "type": "apron",
+      "size_m": [
+        0.025,
+        0.61,
+        0.11
+      ],
+      "center_m": [
+        -0.33,
+        0.0,
+        0.715
+      ],
+      "mass_kg": 1.0903749999999999,
+      "inertia_diagonal_kg_m2": [
+        0.03491017291666666,
+        0.0011562518229166665,
+        0.03386750182291666
+      ]
+    },
+    {
+      "name": "apron_right",
+      "type": "apron",
+      "size_m": [
+        0.025,
+        0.61,
+        0.11
+      ],
+      "center_m": [
+        0.33,
+        0.0,
+        0.715
+      ],
+      "mass_kg": 1.0903749999999999,
+      "inertia_diagonal_kg_m2": [
+        0.03491017291666666,
+        0.0011562518229166665,
+        0.03386750182291666
+      ]
+    }
+  ]
+}

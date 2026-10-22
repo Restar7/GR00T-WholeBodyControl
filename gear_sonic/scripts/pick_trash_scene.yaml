@@ -1,0 +1,72 @@
+# ============================================================================
+# 场景布局配置：G1 从桌上拿起矿泉水瓶 → 踩脚踏垃圾桶 → 丢进去
+# 单位：米 / 度。机器人默认站在原点 (0, 0) 朝向 +X。
+#
+# 改完直接重新生成：
+#   python gear_sonic/scripts/build_pick_trash_scene.py build
+# ============================================================================
+
+scene:
+  model_name: "g1_pick_trash scene"
+  out: "gear_sonic/data/robot_model/model_data/g1/scene_pick_trash_43dof.xml"
+  # 机器人 include（必须与 out 在同一个目录，MuJoCo 的 meshdir 规则要求）
+  robot_include: "g1_29dof_with_hand.xml"
+
+table:
+  # 桌面中心 (x, y)；桌面 0.8 x 0.8 m，四条腿在中心 ±0.33 m
+  center: [0.62, 0.22]
+  yaw_deg: 0.0
+  # 桌面上表面高度
+  height: 0.80
+  # 静摩擦（桌面很滑会抓不住瓶子）
+  friction: [1.0, 0.02, 0.002]
+
+bottle:
+  # 瓶底中心 (x, y)；z 自动取桌面上表面 + clearance
+  pos: [0.38, -0.02]
+  yaw_deg: 0.0
+  clearance: 0.0005
+  # 瓶子是空瓶 21.9 g，接触软一点不容易弹飞
+  solref: [0.004, 1.0]
+  solimp: [0.9, 0.95, 0.001]
+  friction: [1.0, 0.005, 0.0001]
+
+bin:
+  # 垃圾桶底面中心 (x, y)
+  center: [0.58, -0.36]
+  # 0 度 = 踏板朝 -X（正对机器人），改角度 = 挪动踏板方向
+  yaw_deg: 0.0
+  # 踏板与盖子联动的比例：lid = -ratio * pedal（原始资产 4.5）
+  pedal_lid_ratio: 4.5
+  # 踩下踏板需要的力：阻尼/摩擦损耗，0 会让踏板一碰就弹
+  pedal_damping: 0.055
+  pedal_frictionloss: 0.014
+  pedal_return_spring: 0.0
+
+cameras:
+  # 预览用第三人称相机（不影响 head_camera 的数据采集视角）
+  preview:
+    pos: [0.10, -1.55, 1.30]
+    target: [0.62, -0.12, 0.55]
+    fovy: 45.0
+
+# 房间外壳：把桌子/垃圾桶/机器人罩在一个房间里，ego_view 里能看到墙和天花板，
+# 录出来的数据更像真实室内场景。all_* 关掉就退回原来的空地。
+room:
+  enabled: true
+  # 房间内部净尺寸 (x, y) 与层高
+  size: [4.6, 3.6]
+  height: 2.70
+  wall_thickness: 0.06
+  # 房间中心 (x, y)：机器人站在原点，身后留 ~1.4 m
+  center: [0.90, -0.10]
+  wall_rgba: [0.855, 0.845, 0.820, 1.0]
+  floor_rgba: [0.560, 0.470, 0.355, 1.0]
+  # 地板格纹（很淡，看起来像木地板拼缝）
+  floor_checker_rgba: [0.572, 0.482, 0.365, 1.0]
+  floor_texrepeat: 16
+  ceiling: true
+
+render:
+  width: 960
+  height: 720

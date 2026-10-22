@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<mujoco model="hardwood_table_scene">
+  <compiler angle="radian" inertiafromgeom="false"/>
+  <option gravity="0 0 -9.81" timestep="0.002" integrator="implicitfast" solver="Newton" iterations="75"/>
+  <default>
+    <geom condim="6" friction="0.68 0.015 0.002" solref="0.012 1" solimp="0.9 0.95 0.001 0.5 2"/>
+  </default>
+  <asset>
+    <material name="oak_top" rgba="0.725 0.493 0.305 1"/>
+    <material name="oak_frame" rgba="0.517 0.31 0.174 1"/>
+  </asset>
+  <worldbody>
+    <light name="overhead" directional="true" pos="0 -1.5 3.0" dir="0 0 -1"/>
+    <geom name="ground" type="plane" pos="0 0 0" size="3 3 0.1" rgba="0.87 0.88 0.86 1" friction="0.9 0.02 0.002" condim="6"/>
+    <body name="table" pos="0 0 0.002">
+      <freejoint name="free_table"/>
+      <inertial pos="0 0 0.785" mass="12.48" diaginertia="0.666536 0.666536 1.3312"/>
+      <geom name="tabletop" type="box" pos="0 0 0.785" size="0.4 0.4 0.015" material="oak_top"/>
+      <body name="leg_front_left" pos="-0.33 -0.33 0.385">
+        <inertial pos="0 0 0" mass="1.25125" diaginertia="0.0620828542 0.0620828542 0.000521354167"/>
+        <geom name="leg_front_left" type="box" size="0.025 0.025 0.385" material="oak_frame"/>
+      </body>
+      <body name="leg_front_right" pos="0.33 -0.33 0.385">
+        <inertial pos="0 0 0" mass="1.25125" diaginertia="0.0620828542 0.0620828542 0.000521354167"/>
+        <geom name="leg_front_right" type="box" size="0.025 0.025 0.385" material="oak_frame"/>
+      </body>
+      <body name="leg_rear_left" pos="-0.33 0.33 0.385">
+        <inertial pos="0 0 0" mass="1.25125" diaginertia="0.0620828542 0.0620828542 0.000521354167"/>
+        <geom name="leg_rear_left" type="box" size="0.025 0.025 0.385" material="oak_frame"/>
+      </body>
+      <body name="leg_rear_right" pos="0.33 0.33 0.385">
+        <inertial pos="0 0 0" mass="1.25125" diaginertia="0.0620828542 0.0620828542 0.000521354167"/>
+        <geom name="leg_rear_right" type="box" size="0.025 0.025 0.385" material="oak_frame"/>
+      </body>
+      <body name="apron_front" pos="0 -0.33 0.715">
+        <inertial pos="0 0 0" mass="1.090375" diaginertia="0.00115625182 0.0349101729 0.0338675018"/>
+        <geom name="apron_front" type="box" size="0.305 0.0125 0.055" material="oak_frame"/>
+      </body>
+      <body name="apron_rear" pos="0 0.33 0.715">
+        <inertial pos="0 0 0" mass="1.090375" diaginertia="0.00115625182 0.0349101729 0.0338675018"/>
+        <geom name="apron_rear" type="box" size="0.305 0.0125 0.055" material="oak_frame"/>
+      </body>
+      <body name="apron_left" pos="-0.33 0 0.715">
+        <inertial pos="0 0 0" mass="1.090375" diaginertia="0.0349101729 0.00115625182 0.0338675018"/>
+        <geom name="apron_left" type="box" size="0.0125 0.305 0.055" material="oak_frame"/>
+      </body>
+      <body name="apron_right" pos="0.33 0 0.715">
+        <inertial pos="0 0 0" mass="1.090375" diaginertia="0.0349101729 0.00115625182 0.0338675018"/>
+        <geom name="apron_right" type="box" size="0.0125 0.305 0.055" material="oak_frame"/>
+      </body>
+    </body>
+  </worldbody>
+</mujoco>

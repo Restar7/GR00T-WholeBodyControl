@@ -1,0 +1,211 @@
+{
+  "name": "Photo-inspired 12L pedal bin MuJoCo + IsaacLab",
+  "version": "1.0",
+  "units": {
+    "length": "m",
+    "mass": "kg",
+    "angle": "rad"
+  },
+  "source": "estimated reconstruction from a single user-supplied photograph",
+  "approx_capacity_L": 12.18,
+  "pedal_to_lid_ratio": -4.5,
+  "max_lid_angle_deg": 63.17,
+  "validation": "static mesh + XML + kinematics passed; no MuJoCo/Isaac Sim runtime available here",
+  "files": [
+    {
+      "path": "README_CN.md",
+      "bytes": 7967,
+      "sha256": "c44e4e9b6021407d05c1f64aaf20795371f42ea71b021e4cbd0c515ad30385ff"
+    },
+    {
+      "path": "isaaclab/IMPORT_GUIDE_CN.md",
+      "bytes": 4817,
+      "sha256": "e1aafee8432f8ed07da65b198b506e402d315d136e53300a763342146f189a2d"
+    },
+    {
+      "path": "isaaclab/pedal_bin_12l.urdf",
+      "bytes": 18947,
+      "sha256": "ac1582f9375baf665b729b21188afa5c2430071e58e5ea65a49dec17ca738aba"
+    },
+    {
+      "path": "meshes/collision/inner_sector.stl",
+      "bytes": 884,
+      "sha256": "4258876a83917d2596a962e5c80254ef333abaec582f8387a9602c93cf3f5f3e"
+    },
+    {
+      "path": "meshes/collision/lid_disc.stl",
+      "bytes": 9684,
+      "sha256": "6706be1d9252ff4ce4df68d55717926f24abea7da06b2e07a186b34d40b12afc"
+    },
+    {
+      "path": "meshes/collision/outer_sector.stl",
+      "bytes": 884,
+      "sha256": "11add8941389388c9baf56a33b01f00c03bd75fa4499a00210dcb5faf1528b37"
+    },
+    {
+      "path": "meshes/collision/pedal_pad.stl",
+      "bytes": 5484,
+      "sha256": "eafb94b054dca5a6a40a2905692c102bf2161928f3927fa0d2905e4377c53487"
+    },
+    {
+      "path": "meshes/visual/bottom_foot_ring.obj",
+      "bytes": 23961,
+      "sha256": "59878b9cb8fc18f4b921e5f97054783fb137d2c02574c4ac9fd722bc3f49231b"
+    },
+    {
+      "path": "meshes/visual/collar_highlight.obj",
+      "bytes": 23961,
+      "sha256": "23d1b615f366b79aeb03276e53fd4cd619625142bad42ade01d45e627ae44199"
+    },
+    {
+      "path": "meshes/visual/front_label.mtl",
+      "bytes": 99,
+      "sha256": "e8fb62caaf493fb74a40ba4687bebaff5dee5378dab8c2d00c23a0f15a46d60e"
+    },
+    {
+      "path": "meshes/visual/front_label.obj",
+      "bytes": 24106,
+      "sha256": "56c7ea03331202e6387ad8e5c1e0504c013c899b59cc4e1aba59076917400a00"
+    },
+    {
+      "path": "meshes/visual/hinge_supports.obj",
+      "bytes": 1245,
+      "sha256": "adb47efb1110dbbf31be9708faf0e68256a1a2f639c52f7d74297d2466824a27"
+    },
+    {
+      "path": "meshes/visual/inner_bucket.obj",
+      "bytes": 79363,
+      "sha256": "35b8d4e4e50e8531b0d5475133ddca205adb3a5a6351addf5fbb7c6ffa512239"
+    },
+    {
+      "path": "meshes/visual/inner_rim.obj",
+      "bytes": 23961,
+      "sha256": "c02342afcf471e78475d88e6c385adcab9e0c245973d77467da837837300b339"
+    },
+    {
+      "path": "meshes/visual/lid_dome.obj",
+      "bytes": 72355,
+      "sha256": "a0cce9536891c86fa9d1ddf53bb86ca06923a0198d19978cc0609c51684648ca"
+    },
+    {
+      "path": "meshes/visual/lid_edge.obj",
+      "bytes": 24289,
+      "sha256": "2b79f29bd22d1c02873962ae47ccc31024797e32bc44ff82abdc09b52c5de82a"
+    },
+    {
+      "path": "meshes/visual/lid_gasket.obj",
+      "bytes": 24519,
+      "sha256": "f7559dde62763a3f2ea4d509a8f8bed618f51b7f20f8b7981d4abdc3fbebf2ca"
+    },
+    {
+      "path": "meshes/visual/lid_hinge_pin.obj",
+      "bytes": 2829,
+      "sha256": "97c38af0a8da4e5d7903452e96ae19eb2ac658f491898d72f80d949b7298b481"
+    },
+    {
+      "path": "meshes/visual/outer_shell.obj",
+      "bytes": 110667,
+      "sha256": "5aa690c2443ef19d0301c64fcd6c9c4c66eada4cf954760e0f425570b7a3e943"
+    },
+    {
+      "path": "meshes/visual/pedal_grips.obj",
+      "bytes": 3885,
+      "sha256": "14c5b4d7a16c9b192715c4867b6095b9fc32c8f0a5e3e37f20f205d3c9b116d8"
+    },
+    {
+      "path": "meshes/visual/pedal_lever.obj",
+      "bytes": 849,
+      "sha256": "b35a54448b3fffce2cd9c2cc613ceef484919180c2093702f79b531dc0748fc7"
+    },
+    {
+      "path": "meshes/visual/pedal_pad.obj",
+      "bytes": 3400,
+      "sha256": "bfe68176cf86a77ada47e41604590e1407735b3992ea5cf544196d7cdc47fc05"
+    },
+    {
+      "path": "meshes/visual/rear_guide.obj",
+      "bytes": 829,
+      "sha256": "2006130f41db09aecbff6017e57f52bea6e4e74549909b41d883edb15b0e5574"
+    },
+    {
+      "path": "meshes/visual/upper_collar.obj",
+      "bytes": 76416,
+      "sha256": "e433ed5e8aa4ac6095502b70c507da1eca65d116acdc2ee5007574d5d2af0c61"
+    },
+    {
+      "path": "mujoco/pedal_bin_12l.xml",
+      "bytes": 14572,
+      "sha256": "11cc15ecc5f16b10619c6b54721adfaf636b1016e102cf14e2900f426a6fb0f6"
+    },
+    {
+      "path": "mujoco/pedal_bin_12l_asset.xml",
+      "bytes": 14359,
+      "sha256": "0d3e5df1dc888361c7840b92752d02a6663c8b2c69ca233923a4e644ba03fd1f"
+    },
+    {
+      "path": "mujoco/pedal_bin_12l_demo.xml",
+      "bytes": 14977,
+      "sha256": "d88575c40cfe1a6a937bf06ee54cd5ece3fca11d6a791df785ed61a29fa4a646"
+    },
+    {
+      "path": "mujoco/pedal_bin_12l_floating.xml",
+      "bytes": 14612,
+      "sha256": "6b0a8921b3c2422531d825d2ddccf75cfc2a145cd9ab69881c9015babefb127c"
+    },
+    {
+      "path": "preview/closed.glb",
+      "bytes": 314832,
+      "sha256": "f896c69715f837292a25a11736d9772f8e757c620afc58c8e59c7d3f052cc5f3"
+    },
+    {
+      "path": "preview/closed.png",
+      "bytes": 305903,
+      "sha256": "94648d59a79f4e87806dd11289a44b272acd3cfae986c34657dd77c548171a39"
+    },
+    {
+      "path": "preview/comparison.png",
+      "bytes": 437238,
+      "sha256": "fa9d9367e89c1112f441e0ee19de910811cd062daff7e7ff98dbf7272130bb57"
+    },
+    {
+      "path": "preview/interior.png",
+      "bytes": 183488,
+      "sha256": "950b9b2af850b43986c42d6c9c13bde5dabac43144fc3e92cc94bd4e329531cf"
+    },
+    {
+      "path": "preview/open.glb",
+      "bytes": 314840,
+      "sha256": "3af9e1d646852993b08ac14c3a1c3eb73790fe7c0c57bfbb6273c434ac35460b"
+    },
+    {
+      "path": "preview/open.png",
+      "bytes": 330634,
+      "sha256": "10a16b84bbf605302d1c2002c0a29fafdf136c8458af185b71c362bc0a8d6755"
+    },
+    {
+      "path": "scripts/demo_mujoco.py",
+      "bytes": 3934,
+      "sha256": "fb95f805a70c59c4e4dc7c0d6817b5e2d783acf7118bcd3787634becbe8e62f8"
+    },
+    {
+      "path": "scripts/geometry_check.py",
+      "bytes": 2293,
+      "sha256": "a0e8dec3ad26375492a4684ddd95fa52e8b667489e4e190c2db6307251705a8d"
+    },
+    {
+      "path": "scripts/isaaclab_mimic_fallback.py",
+      "bytes": 863,
+      "sha256": "dca5b21e8ac0e674929d0f65c6cf2b0191321c1923a8f1024b08090b3986b819"
+    },
+    {
+      "path": "scripts/render_preview_vtk.py",
+      "bytes": 4677,
+      "sha256": "1753dda528fe80f86c4740088baf588b9f3ce0e7a9d1092c480bb26500da5473"
+    },
+    {
+      "path": "textures/front_label.png",
+      "bytes": 37954,
+      "sha256": "9e7c126181cb7200a22c21c6a8798b8b288bbbf5a87ea02e2dd2b32283d46a9f"
+    }
+  ]
+}
