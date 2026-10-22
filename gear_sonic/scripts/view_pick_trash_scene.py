@@ -30,7 +30,7 @@ DEFAULT_SCENE = (
 WBC_YAML = REPO_ROOT / "gear_sonic/utils/mujoco_sim/wbc_configs/g1_29dof_sonic_model12.yaml"
 
 # 初始自由相机（跟场景里的 pick_trash_preview 差不多，但可自由拖动）
-CAM = {"lookat": (0.45, -0.05, 0.72), "distance": 2.7, "azimuth": 150.0, "elevation": -18.0}
+CAM = {"lookat": (0.45, -0.05, 0.72), "distance": 2.7, "azimuth": 330.0, "elevation": -14.0}
 
 
 def load_wbc_gains():
@@ -102,7 +102,16 @@ def main(argv=None) -> int:
     ap.add_argument("--height", type=int, default=860)
     ap.add_argument("--no-hold", action="store_true", help="不钉基座、不做 PD 保持（真实物理，会倒）")
     ap.add_argument("--headless", action="store_true", help="强制无头模式（用 egl/osmesa）")
+    ap.add_argument("--panels", action="store_true", help="显示 simulate 的左右控制面板（默认关）")
+    ap.add_argument("--width-win", type=int, default=1600, help="窗口宽（像素）")
+    ap.add_argument("--height-win", type=int, default=1000, help="窗口高（像素）")
+    ap.add_argument("--azimuth", type=float, default=None, help="相机方位角（度）")
+    ap.add_argument("--elevation", type=float, default=None, help="相机俯仰角（度）")
+    ap.add_argument("--distance", type=float, default=None, help="相机距离（米）")
     args = ap.parse_args(argv)
+    for key, val in (("azimuth", args.azimuth), ("elevation", args.elevation), ("distance", args.distance)):
+        if val is not None:
+            CAM[key] = float(val)
 
     if args.headless:
         os.environ["MUJOCO_GL"] = "egl"
@@ -149,7 +158,9 @@ def main(argv=None) -> int:
     import mujoco.viewer
 
     print("窗口已打开：鼠标左键拖动转视角 / Ctrl+左键平移 / 滚轮缩放 / 右键拖动物体 / Esc 退出")
-    with mujoco.viewer.launch_passive(model, data) as viewer:
+    with mujoco.viewer.launch_passive(
+        model, data, show_left_ui=args.panels, show_right_ui=args.panels
+    ) as viewer:
         set_camera(viewer.cam)
         step_dt = model.opt.timestep * 5
         while viewer.is_running():

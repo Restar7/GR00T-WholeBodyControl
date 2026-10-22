@@ -198,6 +198,11 @@ right_ankle_roll_link     → 踏板铰链 0.546 m（足部需前伸踩下）
 
 ![踏板打开](scene_pedal_pressed.png)
 
+**在 MuJoCo 交互窗口里看**（`python gear_sonic/scripts/view_pick_trash_scene.py`，
+机器人钉住基座 + PD 保持站立，可以拖动鼠标转视角、右键拖物体）：
+
+![MuJoCo 窗口](scene_mujoco.png)
+
 ### 2.5 资产从哪来（重要）
 
 `gear_sonic/data/robot_model/` 整个被 `.gitignore` 的 `data/` 规则忽略，所以场景 XML 和 mesh
