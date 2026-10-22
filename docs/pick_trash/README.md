@@ -85,6 +85,13 @@
    > 或绕开 DDS 走 `~/groot_repro/sonic_loop.py` 那套进程内闭环（能出视频，但 Pico 遥操作 +
    > LeRobot 采集官方只支持 DDS 这条路）。
 
+   **补充：在 `unitree_sdk2py/core/channel_config.py` 里加 unicast peer 只能解决"发现"，不能解决"握手"。**
+   实测把 `ChannelConfigHasInterface` 改成 `AllowMulticast=false` + `<Peer address="127.0.0.1"/>`
+   之后，配置确实生效了（`/tmp/cdds.LOG` 里能看到），但用 0.10.2 的客户端去订阅 11.0.1 的仿真端，
+   会直接 **core dump**，报的还是同一个 `ddsi_xt_type_init_impl with invalid type object` ——
+   也就是两边"见上面"就崩，方向是对称的。所以 peer 配置可以留着（让发现变确定性），
+   但**版本必须先对齐**。
+
 4. **显存是第二道坎（能绕）。** 8 GB 卡被桌面吃掉 7 GB 时，TRT 连 647 MB 的 workspace 都申请不到，
    控制器直接 `Failed to initialize TensorRT engine` 退出。关掉 Chrome 之后空闲回到 ~2.8 GB，
    decoder(39 MiB)/encoder(47 MiB)/planner 都能正常加载。**每次开跑前先看一眼
